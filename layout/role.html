@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style type="text/css">
+    	html,body{font-family: simkai;background-color: #fff;overflow-x: initial;}
+
+        *{
+            font-size:20px;
+            font-family: simkai;
+        }
+        select{
+            width:200px;
+            height:35px;
+            cursor: pointer;
+        }
+		.scjs{
+			cursor: pointer;
+		}
+		label{
+			cursor: pointer;
+		}
+    </style>
+</head>
+<body>
+<div>
+    角色名称：<select class="JS-ID">
+    <!--<option value="">1</option>-->
+    <!--<option value="">2</option>-->
+    <!--<option value="">3</option>-->
+</select>
+    <button class="scjs">删除角色</button>
+</div>
+<div class="gongneng">
+    <p>功能权限</p>
+    <label><input name="Fruit" type="checkbox" value="" />全局地图 </label><br><br>
+    <label><input name="Fruit" type="checkbox" value="" />井盖列表管理</label><br><br>
+    <label><input name="Fruit" type="checkbox" value="" />异常列表</label><br><br>
+    <label><input name="Fruit" type="checkbox" value="" />数据统计管理</label><br><br>
+    <label><input name="Fruit" type="checkbox" value="" />系统设置</label><br><br>
+    <label><input name="Fruit" type="checkbox" value="" />人员管理</label><br><br>
+    <label><input name="Fruit" type="checkbox" value="" />消息管理</label>
+</div>
+<button style="margin-top: 30px;margin-left: 25px; height:40px;width: 110px;  background-color:#01B5D0;
+    border-radius:10px;color:#ffffff;border:none ;font-size:20px;line-height:40px;cursor:pointer;" id="BC-push">保存</button>
+<button style="margin-top: 30px;margin-left: 25px; height:40px;width: 110px;  background-color:#01B5D0;
+    border-radius:10px;color:#ffffff;border:none ;font-size:20px;line-height:40px;cursor:pointer;" id="RY-push">取消</button>
+<button style="margin-top: 30px;margin-left: 25px; height:40px;width: 110px;  background-color:#01B5D0;
+    border-radius:10px;color:#ffffff;border:none ;font-size:20px;line-height:40px;cursor:pointer;" id="add-push">添加角色</button>
+</body>
+<script src="../lib/jquery-3.1.1.min.js"></script>
+<script src="../js/com.js"></script>
+<script src="../lib/addres.js"></script>
+<script src="../js/jquery.cookie.js"></script>
+<script src="../layer-v3.1.0/layer/layer.js"></script>
+<script>
+
+    $.ajax ({
+        url:$ip+"/admin/roles/findAll",
+        datatype:"json",
+        type: "POST",
+        error:function(msg){
+            console.log('请求出错');
+        },
+        beforeSend: function(xhr){
+            xhr.setRequestHeader('token', $.cookie('token'));
+        },
+        success: function(msg){
+            var ddd =JSON.parse(msg);
+            console.log(ddd);
+            var html=[];
+            for(var i=0,len=ddd.data.length; i<len; i++){
+                html+="<option value="+ddd.data[i].id+">"+ddd.data[i].description+"</option>";
+            }
+            var id =ddd.data[0].id;
+            $(".JS-ID").html(html);
+            $(".JS-ID").on("click", function(){
+                id =$(this).val();
+                console.log($(this));
+                $.ajax({
+                    url:$ip+'admin/privilege/selectAll',
+                    datatype:'json',
+                    type:'POST',
+                    error:function(msg){
+                        console.log('请求出错');
+                    },
+                    beforeSend: function(xhr){
+                        xhr.setRequestHeader('token', $.cookie('token'));
+                    },
+                    success: function(msg){
+                        var ddd =JSON.parse(msg);
+                        console.log(ddd.data);
+                        var html=[];
+                        $.ajax({
+                            url:$ip+'admin/privilege/selectByRid',
+                            datatype:'json',
+                            type:'POST',
+                            data:{'rid':id},
+                            error:function(msg){
+                                console.log('请求出错');
+                            },
+                            beforeSend: function(xhr){
+                                xhr.setRequestHeader('token', $.cookie('token'));
+                            },
+                            success: function(msg2){
+                                var ddd2 =JSON.parse(msg2);
+                                console.log(ddd2);
+
+                                html+="<p>功能权限</p>";
+                                for(var i=0,len1=ddd.data.length; i<len1; i++){
+                                    var panduan=true;
+                                    for(var j=0,len=ddd2.data.length; j<len; j++){
+                                        if(ddd.data[i].id==ddd2.data[j].id){
+                                            panduan=false;
+                                        }
+                                    }
+
+
+                                    if(panduan){
+                                        html+="<label><input class='a1' type='checkbox'  /><span  style='text-indent:-2000px;display:inline-block;padding: 0;'>"+ddd.data[i].id+"</span>"+ddd.data[i].description+"</label><br><br>";
+                                    }
+                                    else{
+                                        html+="<label><input class='a1' type='checkbox' checked=true /><span  style='text-indent:-2000px;display:inline-block;padding: 0;'>"+ddd.data[i].id+"</span>"+ddd.data[i].description+"</label><br><br>";
+                                    }
+                                }
+                                $(".gongneng").html(html);
+                                /*$(".a1").each(function(){
+                                 if($('input').get(0).checked){
+                                 console.log(this);
+                                 }
+                                 else {
+                                 console.log("2")
+                                 }
+                                 })*/
+
+                                $.each($(".a1"),function(i,n){
+                                    if(n.checked){
+                                        console.log("2");
+                                    }
+                                });
+                            }
+                        })
+
+                    }
+
+                })
+            })
+            $("#add-push").on("click", function(){
+                layer.open({
+                    title:"添加人员",
+                    type: 2,
+                    shadeClose: true, //点击遮罩关闭
+                    area : ['310px' , '320px'],
+                    content: 'addRole.html',
+                    end: function () {
+                        location.reload();
+                    }
+                });
+            })
+            $(".scjs").on("click", function(){
+          if(id!=1){
+              $.ajax({
+                  url:$ip+'admin/roles/delete',
+                  datatype:'json',
+                  type:'POST',
+                  data:{'rid':id},
+                  error:function(msg){
+                      console.log('请求出错');
+                  },
+                  beforeSend: function(xhr){
+                      xhr.setRequestHeader('token', $.cookie('token'));
+                  },
+                  success: function(msg){
+                      var ddd =JSON.parse(msg);
+                      if(ddd.success==true){
+                          alert("删除角色成功");
+                          var index = parent.layer.getFrameIndex(window.name);
+                          parent.layer.close(index);
+                          window.location.reload();
+                      }else{
+                          alert("删除失败")
+                      }
+                  }
+              })
+          }else{
+            alert("超级管理员无法删除");
+          }
+
+            })
+        }
+    })
+
+    $.ajax({
+        url:$ip+'admin/privilege/selectAll',
+        datatype:'json',
+        type:'POST',
+        error:function(msg){
+            console.log('请求出错');
+        },
+        beforeSend: function(xhr){
+            xhr.setRequestHeader('token', $.cookie('token'));
+        },
+        success: function(msg){
+            var ddd =JSON.parse(msg);
+            console.log(ddd.data);
+            var html=[];
+            $.ajax({
+                url:$ip+'admin/privilege/selectByRid',
+                datatype:'json',
+                type:'POST',
+                data:{'rid':'1'},
+                error:function(msg){
+                    console.log('请求出错');
+                },
+                beforeSend: function(xhr){
+                    xhr.setRequestHeader('token', $.cookie('token'));
+                },
+                success: function(msg2){
+                    var ddd2 =JSON.parse(msg2);
+                    console.log(ddd2);
+
+                    html+="<p>功能权限</p>";
+                    for(var i=0,len1=ddd.data.length; i<len1; i++){
+                        var panduan=true;
+                        for(var j=0,len=ddd2.data.length; j<len; j++){
+                           if(ddd.data[i].id==ddd2.data[j].id){
+                               panduan=false;
+                           }
+                        }
+
+
+                        if(panduan){
+                            html+="<label><input class='a1' type='checkbox'  /><span  style='text-indent:-2000px;display:inline-block;padding: 0;'>"+ddd.data[i].id+"</span>"+ddd.data[i].description+"</label><br><br>";
+                        }
+                        else{
+                            html+="<label><input class='a1' type='checkbox' checked=true /><span  style='text-indent:-2000px;display:inline-block;padding: 0;'>"+ddd.data[i].id+"</span>"+ddd.data[i].description+"</label><br><br>";
+                        }
+                    }
+                    $(".gongneng").html(html);
+
+
+
+
+
+                    $("#BC-push").on("click", function(){
+                        var mid= $(".JS-ID").val();
+                        var pid=[];
+                        $.each($(".a1"),function(i,n){
+                            if(n.checked){
+                                console.log($(this).siblings("span").text());
+                                pid.push($(this).siblings("span").text());
+                            }
+                        });
+                        console.log(pid);
+                        var ppid=JSON.stringify(pid);
+
+                        $.ajax({
+                            url:$ip+'admin/privilege/addToRole',
+                            datatype:'json',
+                            type:'POST',
+                            data:{'rid':mid,'pid':pid},
+                            error:function(msg){
+                                console.log('请求出错');
+                            },
+                            beforeSend: function(xhr){
+                                xhr.setRequestHeader('token', $.cookie('token'));
+                            },
+                            success: function(msg){
+                                var ddd=JSON.parse(msg);
+                                if(ddd.success=true){
+                                    alert("修改权限成功！");
+                                    window.location.reload();
+                                }
+                                console.log(msg);
+                            }
+
+                        })
+                    })
+
+
+                }
+            })
+
+        }
+
+    })
+
+</script>
+</html>

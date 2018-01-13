@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style type="text/css">
+    	html,body{font-family: simkai;background-color: #fff;overflow-x: initial;}
+        #address select{width: 80px;height: 30px;border: 1px solid #c0c0c0;border-radius: 5px;outline: none;}
+        #address select option{width: 80px;max-width: 100px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+		.reinstate{display: block;width: 70px; height: 35px; font-size: 16px; font-family: simkai;color: #fff; text-align: center; line-height: 35px;background: linear-gradient(to top, #5d6dc3, #3c86d8); border:none; border-radius: 3px;cursor: pointer;margin: 10px auto 0;}
+    </style>
+</head>
+<body>
+<div><span>设备Imei：</span><span class="imei"></span></div>
+<br>
+<div class="XHQD"><span>信号强度：</span><span></span></div>
+<br>
+<div><span>安装时间：</span ><span class="AZSJ"></span></div>
+<br>
+<div><span>最后接收数据时间：</span><span class="YCSJ"></span></div>
+<span class="e_id" style="display: none;"></span>
+<button class="reinstate">恢复</button>
+</body>
+<script src="../lib/jquery-3.1.1.min.js"></script>
+<script src="../js/com.js"></script>
+<script src="../lib/addres.js"></script>
+<script src="../js/jquery.cookie.js"></script>
+<script src="../lib/moment.js"></script>
+<script>
+    $(function(){
+//      var $ip="http://113.108.88.206:9080/Manholecover/";
+//var $ip="http://192.168.0.110:9090/Manholecover/";
+        $.ajax({
+            url:$ip+"admin/equipment/detail/"+sessionStorage.LBid+"",
+            dataType : "json",
+            type : "POST",
+            data:{'status':1},
+            ////async: false,
+            beforeSend : function(xhr){
+                xhr.setRequestHeader('token', $.cookie('token'));
+            },
+            error : function(msg){
+                console.log('请求出错');
+            },
+            success : function(msg){
+                console.log(msg);
+                var ddd = msg.data;
+                $(".imei").text(ddd.imei);
+                $(".e_id").text(ddd.id);
+                $(".AZSJ").text(moment(ddd.installtime).format('YYYY-MM-DD HH:mm:ss'));
+                $(".YCSJ").text(moment(ddd.lastAbnormalTime).format('YYYY-MM-DD HH:mm:ss'));
+                var html=[];
+                if(ddd.signals>19){
+                    html+="<span>信号强度：</span><span style='border:2px solid green;color: green;'>"+ddd.signals+"</span>";
+                }
+                else if(ddd.signals<20&&ddd.signals>14){
+                    html+="<span>信号强度：</span><span style='border:2px solid yellow;color: yellow;'>"+ddd.signals+"</span>";
+                }
+                else if(ddd.signals<15&&ddd.signals!=null){
+                    html+="<span>信号强度：</span><span style='border:2px solid red;color: red;'>"+ddd.signals+"</span>";
+                }
+                else if(ddd.signals==null){
+                    html+="<span>信号强度：</span><span style='border:2px solid #daa520;color: #daa520;'>未收到信号</span>";
+                }
+                
+                $(".XHQD").html(html);
+				$('.reinstate').on('click',function(){
+					var eid = $(this).prev().text();
+					__reinstate(eid);
+				});
+            }
+        });
+        function __reinstate(eid){
+        	$.ajax({
+        		type:"post",
+        		url:$ip+"admin/equipment/updateStatus",
+        		beforeSend : function(xhr){
+	                xhr.setRequestHeader('token', $.cookie('token'));
+	            },
+				data:{
+					eid:eid
+				},
+				error:function(){
+					console.log(2);
+				},
+				success:function(msg){
+					if(msg){
+						alert("恢复成功");
+	                    console.log(msg);
+	                    var index = parent.layer.getFrameIndex(window.name);
+	                    parent.layer.close(index);
+	                    window.location.reload();
+//	                    setTimeout(function(){
+//	                        location.reload();
+//	                    },500)
+					}
+					
+				}
+        	});
+        }
+    });
+
+</script>
+</html>

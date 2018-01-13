@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style type="text/css">
+    	html,body{font-family: simkai;background-color: #fff;overflow-x: initial;}
+        *{
+            font-size:20px;
+            font-family: simkai;
+        }
+        label{
+        	font-size: 18px;
+        }
+        select{
+        	font-family: simkai;
+            width:200px;
+            height:35px;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+	<label for="JS-id">请选择角色：</label>
+	<select class="JS-ID" id="JS-id"></select>
+<br>
+<button style="margin-top: 30px;margin-left: 125px; height:40px;width: 110px;  background: linear-gradient(to top, #5d6dc3, #3c86d8);
+    border-radius:10px;color:#ffffff;border:none ;font-size:20px;line-height:40px;cursor:pointer;" id="push">确认提交</button>
+</body>
+<script src="../lib/jquery-3.1.1.min.js"></script>
+<script src="../js/com.js"></script>
+<script src="../js/jquery.cookie.js"></script>
+<script>
+//  var $ip="http://113.108.88.206:9080/Manholecover/";
+//var $ip="http://192.168.0.110:9090/Manholecover/";
+    $.ajax ({
+        url:$ip+"/admin/roles/findAll",
+        datatype:"json",
+        type: "POST",
+        error:function(msg){
+            console.log('请求出错');
+        },
+        beforeSend: function(xhr){
+            xhr.setRequestHeader('token', $.cookie('token'));
+        },
+        success: function(msg){
+            var ddd =JSON.parse(msg);
+            console.log(ddd);
+            var html=[];
+            html+="<option>请选择</option>"
+            for(var i=0,len=ddd.data.length; i<len; i++){
+                html+="<option value="+ddd.data[i].id+">"+ddd.data[i].description+"</option>";
+            }
+
+            $(".JS-ID").html(html);
+            $(".JS-ID").on("click", function(){
+               id =$(this).val();
+                console.log(id);
+            })
+
+
+            $("#push").on("click", function(){
+                $.ajax({
+                    url:$ip+"/admin/roles/updateROfU",
+                    Type:"POST",
+                    data:{'rid':id,'uid':sessionStorage.Uid},
+                    error:function(msg){
+                        console.log('请求出错');
+                    },
+                    beforeSend: function(xhr){
+                        xhr.setRequestHeader('token', $.cookie('token'));
+                    },
+                    success: function(msg){
+                        alert("添加数据成功");
+                        console.log(msg);
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                        setTimeout(function(){
+                            window.location.href="../html/JGLB.html";
+                        },500)
+
+                    }
+
+
+                })
+            })
+
+        }
+    })
+
+
+</script>
+</html>

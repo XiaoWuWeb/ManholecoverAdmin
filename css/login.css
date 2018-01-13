@@ -1,0 +1,75 @@
+body{
+/*background:url(../images/entry_bg.png) 0 0;*/
+background:url(../images/entry_bg.jpg) 0 0;
+
+}
+.login{
+position:absolute;
+right:10%;
+top:50%;
+height:300px;
+width:440px;
+background-color:#fff;
+margin-left:-220px;
+margin-top:-150px;
+border-radius:10px;
+}
+.zh{
+position:absolute;
+top:60px;
+left:27px;
+color:#666;
+font-size:26px;
+font-family: simkai;
+}
+.login input{
+width:310px;
+height:50px;
+border:1px #666 solid;
+border-radius:10px;
+outline: none;
+/*color: #cccccc;*/
+font-size:20px;
+font-family: simkai;
+text-indent:2em;
+}
+.zhsr{
+position:absolute;
+top:50px;
+left: 95px;
+}
+.mmsr{
+position:absolute;
+top:130px;
+left: 95px;
+}
+.mm{
+position:absolute;
+top:140px;
+left:27px;
+font-size:26px;
+font-family: simkai;
+color:#666;
+}
+button{
+width:310px;
+height:50px;
+background-color:#0189cf;
+border-radius:10px;
+position:absolute;
+left: 95px;
+top:210px;
+border:none;
+color: #ffffff;
+font-size:30px;
+font-family: simkai;
+cursor: pointer;
+}
+h1{
+position:absolute;
+right:10%;
+top:40%;
+margin-top:-200px;
+font-size:30px;
+color: #ffffff;
+}

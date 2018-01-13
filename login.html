@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>华腾智能井盖管理系统</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/crowd.css">
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+    <meta http-equiv="x-dns-prefetch-control" content="on" /> 
+	<meta name="baidu-site-verification" content="rMHEpuoVTG" /> 
+	<meta name="google-site-verification" content="c1-nKGtAdrAkj-PJ3vUFB3tpx-hzhYEFLhMnXPwLoBU" /> 
+</head>
+<body onkeydown="keyLogin()">
+<!--<h1 class="">华腾智能管理系统</h1>-->
+	<div class="login" style="z-index: 2;">
+	    <label class="zh">账号:</label>
+	    <input  class="zhsr" id="zhsr" placeholder="请输入用户名"/>
+	    <label class="mm">密码:</label>
+	    <input  class="mmsr" id="mmsr" type="password" placeholder="请输入密码"/>
+	    <button id="on-login">确认</button>
+	</div>
+	<div class="bg" style="z-index: 1;">
+        <canvas id="display"></canvas>
+        <div id="blachole"></div>
+    </div>
+    <script src="js/jquery.min.js"></script>
+	<script src="js/jquery.cookie.js"></script>
+	<script src="js/constellation.js"></script>
+	<!--<script src="js/com.js"></script>-->
+	<script src="js/login.js"></script>
+	<script type="text/javascript">
+		var heightCon = $(".pg-canvas").height() - 100;
+	    $(".pg-canvas").css({ "height": heightCon });
+	    function keyLogin(){
+			if (event.keyCode==13){  //回车键的键值为13
+				document.getElementById("on-login").click(); //调用登录按钮的登录事件
+			}
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style type="text/css">
+    	html,body{font-family: simkai;background-color: #fff;overflow-x: initial;}
+        #address select{width: 80px;height: 30px;font-family: simkai;border: 1px solid #c0c0c0;border-radius: 5px;outline: none;}
+        #address select option{width: 80px;max-width: 100px;font-family: simkai;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+		.acquire_btn{
+			height: 40px;
+			font-size: 18px;
+			font-family: simkai;
+			line-height: 40px;
+			color: #000;
+			background-color: #f1f1f1;
+			padding: 0 10px;
+			border-radius: 10px;
+			margin: 30px 0 0 15px;
+			cursor: pointer;
+			float: left;
+		}
+		#push{
+			width: 110px;
+			height:40px;
+			font-size:18px;
+			font-family: simkai;
+			color:#ffffff;
+			line-height:40px;
+			background: linear-gradient(to top, #5d6dc3, #3c86d8);
+    		border-radius:10px;
+    		border:none ;
+    		cursor:pointer;
+    		margin: 30px 15px 0 0;
+    		float: right;
+		}
+		.zhsr{
+			/*border-radius: 2px;*/
+			border: 1px solid #c0c0c0;
+			border-radius: 2px;
+			outline: none;
+			font-family: simkai;
+		}
+    </style>
+</head>
+<body style="margin-left: 20px; margin-top: 20px;">
+<label class="zh" for="J-IMEI">设备IMEI:</label>
+<input  class="zhsr" id="J-IMEI" type="number" placeholder="请输入设备IMEI号"/>
+<span class="imei"></span> <br><br>
+<label class="zh" for="J-JD">经度位置:</label>
+<input  class="zhsr" id="J-JD" type="number" placeholder="如116.375526"/>
+<span class="lon"></span> <br><br>
+<label class="zh" for="J-WD">纬度位置:</label>
+<input  class="zhsr" id="J-WD" type="number" placeholder="如39.88836"/>
+<span class="lat"></span> <br><br>
+<div id="address">
+    <label class="zh">选择地点:</label>
+    <select class="select" id="province" name="province">
+        <option value="" >选择省份</option>
+    </select>
+    <select name="city" id="city">
+        <option value="" >选择城市</option>
+    </select>
+
+    <select name="town" id="town">
+        <option value="" >选择区域</option>
+    </select>
+</div><br>
+<label class="zh" for="J-dz">详细地址：</label>
+<input  class="zhsr" id="J-dz" placeholder="请输入街道/镇/路"/><br>
+<div class="acquire_btn">获取经纬度</div>
+<button id="push">确认提交</button>
+</body>
+
+<script src="../lib/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=rUvDHOfS2tDTqKFEetiGUrbsCCGGlYIw"></script>
+<script src="../js/com.js"></script>
+<script src="../lib/addres.js"></script>
+<script src="../js/jquery.cookie.js"></script>
+<script>
+    $(function(){
+    	
+//      var $ip="http://113.108.88.206:9080/Manholecover/";
+//		var $ip="http://192.168.0.111:9090/Manholecover/";
+		var map = new BMap.Map("container");
+		var localSearch = new BMap.LocalSearch(map);
+		function searchByStationName(address) {
+			var oProvince = $('#province').val();
+			var oCity = $('#city').val();
+			var oTown = $('#town').val();
+//		　　	var keyword = document.getElementById("text_").value;
+			var keyword = oProvince + oCity + oTown + address;
+		　　	localSearch.setSearchCompleteCallback(function (searchResult) {
+		　　　　	var poi = searchResult.getPoi(0);
+			console.log(poi.point.lng)
+			console.log(poi.point.lat)
+				$('#J-JD').val(poi.point.lng);
+				$('#J-WD').val(poi.point.lat);
+//		　　　　document.getElementById("result_").value = poi.point.lng + "," + poi.point.lat; //获取经度和纬度，将结果显示在文本框中
+//		　　　　map.centerAndZoom(poi.point, 13);
+		　　	});
+			localSearch.search(keyword);
+		}
+		
+		$('.acquire_btn').on('click',function(){
+			var address = $('#J-dz').val();
+			searchByStationName(address);
+		});
+
+        $("#address").selectAddress()
+        $("#town").focusout(function(){
+            var province = $("#province option:selected").html()
+            var city = $("#city option:selected").html()
+            var town = $("#town option:selected").html()
+            if(province!= '选择省份' && city!="选择城市" && town!='选择区域'){
+//                console.log('省份/直辖市：'+province+'\n城市:'+city+'\n区/县：'+town)
+            }
+        })
+        var imei_Boolean=false;
+        var lon_Boolean=false;
+        var lat_Boolean=false;
+        $('#J-IMEI').blur(function(){
+            if ((/[\d.]/).test($("#J-IMEI").val())){
+                $('.imei').html("✔").css("color","green");
+                imei_Boolean = true;
+            }else {
+                $('.imei').html("×").css("color","red");
+                imei_Boolean = false;
+            }
+        });
+        $('#J-JD').blur(function(){
+            if ((/^[\-\+]?(0?\d{1,2}\.\d{1,5}|1[0-7]?\d{1}\.\d{1,6}|180\.0{1,5})$/).test($("#J-JD").val())){
+                $('.lon').html("✔").css("color","green");
+                lon_Boolean = true;
+            }else {
+                $('.lon').html("×").css("color","red");
+                lon_Boolean = false;
+            }
+        });
+        $('#J-WD').blur(function(){
+            if ((/^[\-\+]?([0-8]?\d{1}\.\d{1,6}|90\.0{1,6})$/).test($("#J-WD").val())){
+                $('.lat').html("✔").css("color","green");
+                lat_Boolean = true;
+            }else {
+                $('.lat').html("×").css("color","red");
+                lat_Boolean = false;
+            }
+        });
+        $('#push').on("click", function(){
+            console.log($("#J-IMEI").val());
+            if(imei_Boolean&&lon_Boolean&&lat_Boolean&&$("#province").val()!=""&&$("#city").val()!=""&&$("#town").val()!=""&&$("#J-dz").val()!=""){
+                var province = $("#province").val();
+                if(province=="上海"||province=="天津"||province=="北京"||province=="重庆"){
+                    province=$("#province").val()+"市";
+                }
+                else{
+                    province =$("#province").val()+"省";
+                }
+                $.ajax({
+                    url:$ip+"admin/equipment/add",
+                    data: {'imei':$("#J-IMEI").val(),'location':$("#J-WD").val()+","+$("#J-JD").val(),'provice':province,'city':$("#city").val(),'district':$("#town").val(),'address':$("#J-dz").val()},
+                    datatype:"json",
+                    type: "POST",
+                                    //async: false,
+
+                    error:function(msg){
+                        console.log('请求出错');
+                    },
+                    beforeSend: function(xhr){
+                         xhr.setRequestHeader('token', $.cookie('token'));
+                    },
+                    success: function(msg){
+                        console.log(msg);
+                        var ddd =JSON.parse(msg);
+                        console.log(ddd);
+                        if(ddd.success==true){
+                            alert("添加数据成功");
+                            console.log(msg);
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                            window.location.reload();
+                        }else{
+                            alert("添加数据失败，请仔细填写")
+                        }
+
+                    }
+                })
+
+            }
+            else{
+                alert("请填写正确信息");
+            }
+        })
+    })
+
+</script>
+</html>

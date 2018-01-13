@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style type="text/css">
+    	html,body{font-family: simkai;background-color: #fff;overflow-x: initial;}
+        button{
+        	font-family: simkai;
+            border:none;
+            width:50px;
+            height:27px;
+            cursor:pointer;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+<div class="clearfix" style="padding-right: 30px;"><span>权限名称：</span><input style="float: right;" class="tjmc" type=""/></div>
+<br>
+<div class="clearfix" style="padding-right: 30px;"><span>权限URL：</span><input style="float: right;" class="tjurl" type=""/></div>
+<br>
+<button style="margin-left: 50px; width: 150px;height: 30px;" id="add-TJ1">保存</button>
+</body>
+<script src="../lib/jquery-3.1.1.min.js"></script>
+<script src="../js/com.js"></script>
+<script src="../lib/addres.js"></script>
+<script src="../js/jquery.cookie.js"></script>
+<script src="../layer-v3.1.0/layer/layer.js"></script>
+<script>
+//	var $ip="http://192.168.0.110:9090/Manholecover/";
+//  var $ip="http://113.108.88.206:9080/Manholecover/";
+    $("#add-TJ1").on("click", function(){
+        $.ajax({
+            url:$ip+'admin/privilege/add',
+            datatype:'json',
+            type:'POST',
+            data:{'url':$(".tjurl").val(),'desciption':$(".tjmc").val()},
+            error:function(msg){
+                console.log('请求出错');
+            },
+            beforeSend: function(xhr){
+                xhr.setRequestHeader('token', $.cookie('token'));
+            },
+            success: function(msg){
+                var ddd=JSON.parse(msg);
+                console.log(msg);
+                if(ddd.success==true){
+                    alert("添加权限成功")
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                    window.location.reload();
+                }
+                else{
+                    alert("参数错误");
+                }
+            }
+        })
+    })
+
+</script>
+</html>

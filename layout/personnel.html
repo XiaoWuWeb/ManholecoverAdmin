@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style type="text/css">
+    	html,body{font-family: simkai;background-color: #fff;overflow-x: initial;}
+    	label{
+    		display: inline-block;
+		    width: 85px;
+		    text-align: right;
+    	}
+    	input{
+    		font-family: simkai;
+    		border: 1px #ccc solid;
+    		border-radius: 2px;
+    		outline: none;
+    	}
+    	#but{
+    		font-size: 16px;
+    		cursor: pointer;
+    	}
+    </style>
+</head>
+<body style="margin-top: 20px;margin-left: 30px;">
+<form action="admin/users/add" method="post" enctype="multipart/form-data" id="form1">
+	<label for="R-cardId">身份证号:</label>
+    <input placeholder="请输入身份证号" type="text" name="cardId" id="R-cardId"/>
+    <span class="reg-id"></span><br/><br/>
+    <label for="R-jobno">工号:</label>
+    <input placeholder="请输入工号" type="text" name="jobno" id="R-jobno"/>
+    <span class="reg-jobno"></span><br/><br/>
+    <label for="R-realname">真实姓名:</label>
+    <input placeholder="请输入真实姓名" type="text" name="realname" id="R-realname"/>
+    <span class="reg-name"></span><br/><br/>
+    <label for="R-username">登录用户名:</label>
+    <input type="text" placeholder="请输入登录所用的名称" name="username" id="R-username"/>
+    <span class="reg-username"></span><br/><br/>
+    <label for="R-phone">手机号:</label>
+    <input type="text" placeholder="请输入11位手机号" name="phone" id="R-phone"/>
+    <span class="reg-phone"></span><br/><br/>
+    <label for="R-password">登录密码:</label>
+    <input type="password" placeholder="请输入登录密码" name="password" id="R-password"/>
+    <span class="reg-password"></span><br/><br/>
+    <label for="R-name">公司名称:</label>
+   	<input type="text" placeholder="如有需要填写" name="companyName" id="R-name"/>
+    <span class="reg-company"></span><br/><br/>
+    <label for="R-logo">公司logo:</label>
+   	<input type="file" name="logoFile" id="R-logo"/><br/><br/>
+    <input type="button" value="提交" id="but" style="display: block;width: 200px;height: 35px; margin-left: 20px;font-size: 18px; text-align: center; color: #fff; background: linear-gradient(to top, #5d6dc3, #3c86d8);border-radius: 3px;margin: 5px auto 0;"/>
+</form>
+</body>
+<script src="../lib/jquery-3.1.1.min.js"></script>
+<script src="../js/jquery.cookie.js"></script>
+<script src="../js/com.js"></script>
+<script>
+    var id_Boolean = false;
+    var jobno_Boolean = false;
+    var name_Boolean = false;
+    var username_Boolean = false;
+    var phone_Boolean = false;
+    var password_Boolean = false;
+//    var company_Boolean = false;
+
+    $('#R-cardId').blur(function(){
+        if ((/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/).test($("#R-cardId").val())){
+            $('.reg-id').html("✔").css("color","green");
+            id_Boolean = true;
+        }else {
+            $('.reg-id').html("×").css("color","red");
+            id_Boolean = false;
+        }
+    });
+    $('#R-jobno').blur(function(){
+        if ($("#R-jobno").val()!=""){
+            $('.reg-jobno').html("✔").css("color","green");
+            jobno_Boolean = true;
+        }else {
+            $('.reg-jobno').html("×").css("color","red");
+            jobno_Boolean = false;
+        }
+    });
+    $('#R-realname').blur(function(){
+        if ($("#R-realname").val()!=""){
+            $('.reg-name').html("✔").css("color","green");
+            name_Boolean = true;
+        }else {
+            $('.reg-name').html("×").css("color","red");
+            name_Boolean = false;
+        }
+    });
+    $('#R-username').blur(function(){
+        $.ajax({
+            url : $ip +"admin/users/findByName",
+            dataType : "json",
+            type : "post",
+            data:{'username':$("#R-username").val()},
+            error:function(msg){
+                console.log('请求出错');
+            },
+            beforeSend: function(xhr){
+                xhr.setRequestHeader('token', $.cookie('token'));
+            },
+            success: function(msg){
+                if ($("#R-username").val()!=""&&msg.success==false){
+                    $('.reg-username').html("✔").css("color","green");
+                    username_Boolean = true;
+                }
+                else if(msg.success==true){
+                    alert("您所输入的登录名已存在");
+                    $('.reg-username').html("×").css("color","red");
+                    username_Boolean = false;
+                }
+                else {
+                    $('.reg-username').html("×").css("color","red");
+                    username_Boolean = false;
+                }
+
+            }
+        })
+
+    });
+    $('#R-phone').blur(function(){
+        if ((/^1[34578]\d{9}$/).test($("#R-phone").val())){
+            $('.reg-phone').html("✔").css("color","green");
+            phone_Boolean = true;
+        }else {
+            $('.reg-phone').html("×").css("color","red");
+            phone_Boolean = false;
+        }
+    });
+    $('#R-password').blur(function(){
+        if ($('#R-password').val()!=""){
+            $('.reg-password').html("✔").css("color","green");
+            password_Boolean = true;
+        }else {
+            $('.reg-password').html("×").css("color","red");
+            password_Boolean = false;
+        }
+    });
+    $("#but").on("click", function(){
+       if(id_Boolean&&jobno_Boolean&&name_Boolean&&username_Boolean&&phone_Boolean&&password_Boolean){
+           var formData = new FormData($("#form1")[0]);
+           console.log(formData);
+           $.ajax({
+               url : $ip + "admin/users/add",
+               dataType : "json",
+               type : "post",
+               data : formData,
+               contentType : false, //必须false才会避开jQuery对 formdata 的默认处理 XMLHttpRequest会对 formdata 进行正确的处理
+               processData : false,
+               error:function(msg){
+                   console.log('请求出错');
+               },
+               beforeSend: function(xhr){
+                   xhr.setRequestHeader('token', $.cookie('token'));
+               },
+               success : function(msg){
+                   console.log(msg);
+                   if(msg.success == true){
+                       alert("添加数据成功");
+                       console.log(msg);
+                       var index = parent.layer.getFrameIndex(window.name);
+                       parent.layer.close(index);
+                       setTimeout(function(){
+                           window.location.reload();
+                       }, 2000)
+                   }
+                   else if(msg.success){
+                       alert("添加数据失败，请选择png格式并且不大于两兆的图片。")
+                   }
+                   else {
+                       alert("添加数据失败");
+                   }
+               }
+           });
+       }
+        else{
+           alert("请输入完整的信息！")
+       }
+
+    })
+
+</script>
+</html>

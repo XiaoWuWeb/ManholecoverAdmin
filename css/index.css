@@ -1,0 +1,249 @@
+.space-box{
+    background: #fff;
+    height: 190px;
+    border-radius: 4px;
+    padding: 10px 20px 20px;
+    margin: 0 10px;
+}
+.share-header, .problem-header, .service-header{
+    height: 50px;
+    font-size: 18px;
+    line-height: 50px;
+    /*margin-top: 15px;*/
+}
+.share_content {
+    height: 270px;
+    overflow: hidden;
+}
+.share_content li {
+    line-height: 30px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    color: #999;
+    /*font-family: Arial;*/
+    font-family: simkai;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 85%;
+    /* width: 40em; */
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.weather{
+    height: 403px;
+    background-color: #fff;
+    padding-top: 5px;
+}
+.dynamic{
+    height: 210px;
+    background-color: #fff;
+    padding-top: 5px;
+}
+.service{
+    height: 210px;
+    background-color: #fff;
+    padding-top: 5px;
+}
+
+.problem-box, .space-box, .share-box {
+    background: #fff;
+    height: 100%;
+    border-radius: 4px;
+    /*padding: 10px 20px 20px;*/
+    margin: 0 10px;
+    text-align: left;
+}
+
+.problem_content {
+    height: 90px;
+    overflow: hidden;
+}
+
+.problem_content li {
+    line-height: 30px;
+    letter-spacing: 1px;
+}
+
+.problem_content li a {
+    display: block;
+    line-height: 30px;
+    text-decoration: none;
+    color: #999;
+    /*font-family: Arial;*/
+    font-family: simkai;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 85%;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.service-box {
+    position: relative;
+    /* min-width: 284px; */
+    background: #fff;
+    height: 200px;
+    border-radius: 4px;
+    text-align: left;
+    /*padding: 10px 20px 10px;*/
+    margin: 0 10px;
+}
+
+.app-box {
+    width: 25%;
+   float: left;
+}
+
+.bomi_app {
+    
+    text-align: center;
+}
+
+.bomi_app img {
+    display: block;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+}
+
+.bomi_app span {
+    font-size: 12px;
+}
+
+.service_man {
+    line-height: 24px;
+    margin: 10px 0;
+}
+
+.service_btn {
+    display: inline-block;
+    background-color: #fa7821;
+    height: 33px;
+    padding: 0 10px;
+    border-radius: 2px;
+    color: #fff;
+    line-height: 33px;
+    text-align: center;
+    margin-top: 20px;
+}
+.flt{
+    float: left;
+}
+
+.r-top {
+    float: right;
+    font-size: 18px;
+    height: 80px;
+    line-height: 80px;
+}
+
+.r-top ul li {
+    float: left;
+    margin-right: 15px;
+    color: #ffffff;
+    /*line-height: 44px;*/
+}
+
+.r-top ul li a {
+    color: #ffffff;
+}
+
+.r-top ul li a i img {
+    text-align: center;
+    line-height: 44px;
+    /*margin-top: 13px;*/
+    border: 0;
+    margin: 0 5px 4px 0px;
+    /*vertical-align: top;*/
+}
+
+#map{
+    height: 100%;
+}
+
+.search-inline {
+    position: fixed;
+    left: 270px;
+    top: 88px;
+    z-index: 9999;
+    /*width: 500px;*/
+    height: 65px;
+    background: url(../images/search-backgrong.png) no-repeat;
+    padding: 14px 0px 14px 20px;
+    float: left;
+}
+
+.search-inline .search-group {
+    display: inline-block;
+}
+.search-group {
+    position: relative;
+    margin-right: 14px;
+    display: inline-block
+}
+
+.search-control {
+    width: 140px;
+    height: 40px;
+    font-size: 14px;
+    color: #303030;
+    line-height: 40px;
+    border: 1px #dadada solid;
+    border-radius: 4px;
+    outline: none;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    padding: 0 14px;
+}
+
+.search-group > img {
+    width: 9px;
+    height: 7px;
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    z-index: 2;
+    transition: all 0.2s;
+}
+
+.normal{
+    width: 78px;
+    height: 78px;
+    position: fixed;
+    right: 50px;
+    top: 120px;
+    cursor: pointer;
+}
+.noonline{
+    width: 78px;
+    height: 78px;
+    position: fixed;
+    right: 50px;
+    top: 240px;
+    cursor: pointer;
+}
+.abnormal{
+    width: 78px;
+    height: 78px;
+    position: fixed;
+    right: 50px;
+    top: 360px;
+    cursor: pointer;
+}
+
+.restore_btn{
+    color: #fff;
+    background-color: rgb(6, 217, 149);
+    background: linear-gradient(to top, #5d6dc3, #3c86d8);
+    border-radius: 3px;
+    padding: 10px 20px;
+    margin: 10px auto;
+    text-align: center;
+    cursor: pointer;
+}

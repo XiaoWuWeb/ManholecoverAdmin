@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            font-size:20px;
+        }
+        select{
+            width:200px;
+            height:35px;
+        }
+    </style>
+</head>
+<body>
+&nbsp&nbsp请选择角色&nbsp&nbsp<select class="JS-ID">
+
+</select>
+<br>
+<button style="margin-top: 30px;margin-left: 125px; height:40px;width: 110px;  background-color:#01B5D0;
+    border-radius:10px;color:#ffffff;border:none ;font-size:20px;line-height:40px;cursor:pointer;" id="push">确认提交</button>
+</body>
+<script src="../lib/jquery-3.1.1.min.js"></script>
+<script src="../js/com.js"></script>
+<script src="../js/jquery.cookie.js"></script>
+<script>
+//  var $ip="http://113.108.88.206:9080/Manholecover/";
+//var $ip="http://192.168.0.110:9090/Manholecover/";
+    $.ajax ({
+        url:$ip+"/admin/roles/findAll",
+        datatype:"json",
+        type: "POST",
+        error:function(msg){
+            console.log('请求出错');
+        },
+        beforeSend: function(xhr){
+            xhr.setRequestHeader('token', $.cookie('token'));
+        },
+        success: function(msg){
+            var ddd =JSON.parse(msg);
+            console.log(ddd);
+            var html=[];
+            html+="<option>请选择</option>"
+            for(var i=0,len=ddd.data.length; i<len; i++){
+                html+="<option value="+ddd.data[i].id+">"+ddd.data[i].description+"</option>";
+            }
+
+            $(".JS-ID").html(html);
+            $(".JS-ID").on("click", function(){
+               id =$(this).val();
+                console.log(id);
+            })
+
+
+            $("#push").on("click", function(){
+                $.ajax({
+                    url:$ip+"/admin/roles/setToUser",
+                    Type:"POST",
+                    data:{'rid':id,'uid':sessionStorage.Uid},
+                    error:function(msg){
+                        console.log('请求出错');
+                    },
+                    beforeSend: function(xhr){
+                        xhr.setRequestHeader('token', $.cookie('token'));
+                    },
+                    success: function(msg){
+                        alert("添加数据成功");
+                        console.log(msg);
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                        setTimeout(function(){
+                            window.location.href="../html/JGLB.html";
+                        },500)
+
+                    }
+
+
+                })
+            })
+
+        }
+    })
+
+
+</script>
+</html>

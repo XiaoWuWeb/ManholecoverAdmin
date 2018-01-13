@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style type="text/css">
+    	html,body{font-family: simkai;background-color: #fff;overflow-x: initial;}
+        button{
+        	font-size: 16px;
+        	font-family: simkai;
+            border:none;
+            width:50px;
+            height:27px;
+            cursor:pointer;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+<div CLASS="bigGL">
+    <div>
+        <span style="margin-right: 70px;">全局地图</span>
+        <button style="border:none">编辑</button>
+        <button style="border:none">删除</button>
+    </div>
+    <br>
+    <div>
+        <span style="margin-right: 38px;">井盖列表管理</span>
+        <button style="border:none">编辑</button>
+        <button style="border:none">删除</button>
+    </div>
+    <br>
+    <div>
+        <span style="margin-right: 70px;">异常列表</span>
+        <button style="border:none">编辑</button>
+        <button style="border:none">删除</button>
+    </div>
+</div>
+<br>
+<br>
+<button style="margin-left: 40px; width: 150px;height: 30px;" id="add-TJ">添加权限</button>
+</body>
+<script src="../lib/jquery-3.1.1.min.js"></script>
+<script src="../js/com.js"></script>
+<script src="../lib/addres.js"></script>
+<script src="../js/jquery.cookie.js"></script>
+<script src="../layer-v3.1.0/layer/layer.js"></script>
+<script>
+//  var $ip="http://113.108.88.206:9080/Manholecover/";
+//var $ip="http://192.168.0.110:9090/Manholecover/";
+    $("#add-TJ").on("click", function(){
+        layer.open({
+            title:"添加权限                                            ",
+            type: 2,
+            shadeClose: true, //点击遮罩关闭
+            area : ['310px' , '220px'],
+            content: 'TJQX.html'
+        });
+        });
+
+    $.ajax({
+        url:$ip+'admin/privilege/selectAll',
+        datatype:'json',
+        type:'POST',
+        error:function(msg){
+            console.log('请求出错');
+        },
+        beforeSend: function(xhr){
+            xhr.setRequestHeader('token', $.cookie('token'));
+        },
+        success: function(msg){
+            var ddd =JSON.parse(msg);
+            console.log(ddd.data);
+            var html=[];
+            //<span style="margin-right: 70px;">全局地图</span>f
+            //<button style="border:none">编辑</button>
+            //      <button style="border:none">删除</button>
+            for(var i=0,len=ddd.data.length; i<len; i++){
+                html+="<div class='bigG'>"
+                html+="<p class='fid' style='text-indent:-2000px;margin: 0;padding: 0;width: 0;height: 0;'>"+ddd.data[i].fatherid+"</p>";
+                html+="<p class='qid' style='text-indent:-2000px;margin: 0;padding: 0;width: 0;height: 0;'>"+ddd.data[i].id+"</p>";
+                html+="<div style='width: 200px; display:inline-block'>"+ddd.data[i].description+"</div>";
+                html+="<button class='bianji' style='border:none;margin-right: 5px;'>编辑</button>";
+                html+="<button style='border:none'>删除</button>";
+                html+="<br>";
+                html+="<br>";
+                html+="</div>"
+
+            }
+
+
+            $(".bigGL").html(html);
+            $(".bianji").on("click", function(){
+
+                var qid=$(this).siblings("p:eq(1)").text();
+                sessionStorage.qid=qid;
+                var fid=$(this).siblings("p:eq(0)").text();
+                sessionStorage.fid=fid;
+                sessionStorage.qid=qid;
+                        layer.open({
+                            title:"修改权限",
+                            type: 2,
+                            shadeClose: true, //点击遮罩关闭
+                            area : ['310px' , '220px'],
+                            content: 'TJQX2.html'
+                        });
+
+            })
+        }
+
+    })
+
+</script>
+</html>
